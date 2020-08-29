@@ -1,0 +1,100 @@
+version: '3.4'
+
+networks: 
+  odoo-net:
+
+volumes:
+  odoo-datastore:
+  odoo-filestore:
+
+services:
+  nginx:
+    image: nginx:alpine
+    restart: unless-stopped
+    networks:
+      - odoo-net
+    ports:
+      - 8080:80
+    volumes:
+      - ./config/nginx:/etc/nginx/conf.d
+
+  odoo:
+    image: odoo12:latest
+    build:
+      context: odoo-ita/12.0
+      args:
+        - ODOO_VERSION=12.0
+        - ODOO_RELEASE=20200826
+        - ODOO_SHA=3acc73ce5dfbe550d6ad617a4078b0a5d160f9db
+    volumes:
+      - odoo-filestore:/var/lib/odoo
+      - ./config/odoo:/etc/odoo
+    networks:
+      - odoo-net
+    depends_on:
+      - redis
+      - odoo-db
+      - mailhog
+    ports:
+      - "8069:8069"
+    environment:
+        HOST: odoo-db
+        USER: odoo
+        PASSWORD: odoo
+        ENABLE_REDIS: "True"
+        REDIS_HOST: redis
+    
+  odoo2:
+    image: odoo12:latest
+    build:
+      context: odoo-ita/12.0
+      args:
+        - ODOO_VERSION=12.0
+        - ODOO_RELEASE=20200826
+        - ODOO_SHA=3acc73ce5dfbe550d6ad617a4078b0a5d160f9db
+    volumes:
+      - odoo-filestore:/var/lib/odoo
+      - ./config/odoo:/etc/odoo
+    networks:
+      - odoo-net
+    depends_on:
+      - redis
+      - odoo-db
+      - mailhog
+    ports:
+      - "8169:8069"
+    environment:
+        HOST: odoo-db
+        USER: odoo
+        PASSWORD: odoo
+        ENABLE_REDIS: "True"
+        REDIS_HOST: redis
+      
+
+  odoo-db:
+    image: postgres:12-alpine
+    volumes:
+      - odoo-datastore:/var/lib/postgresql/data      
+    networks:
+      - odoo-net
+    ports:
+      - "25432:5432"
+    environment:
+      POSTGRES_DB:       odoo
+      POSTGRES_USER:     odoo
+      POSTGRES_PASSWORD: odoo
+   
+  mailhog:
+    image: mailhog/mailhog:latest
+    networks:
+      - odoo-net
+    ports:
+      - "8025:8025"
+      - "1025:1025"
+
+  redis:
+    image: redis:6.0.6-alpine
+    networks:
+      - odoo-net
+    ports:
+      - "26379:6379"
