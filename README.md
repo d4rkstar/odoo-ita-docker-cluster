@@ -130,3 +130,6 @@ docker-compose up -d nginx
 
 Se tutto è filato liscio, dovreste poter accedere attraverso l'url: http://localhost:8080/web/login.
 
+Ricordate di modificare il parametro `web.base.url` attivando la modalità sviluppatore e poi andando in Parametri di sistema.
+
+
