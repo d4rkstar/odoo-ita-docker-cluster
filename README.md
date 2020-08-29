@@ -32,8 +32,9 @@ trovato attraverso i files di Franco ;)). Potete modificare la lista a vostro pi
 prima del modulo `web`, usando il parametro `server_wide_modules`
 
 ## 1.3 Credits
-- **Franco Tampieri e gli altri membri del gruppo Odoo ITA** - per aver fornito alcune dritte utilissime sulla 
+- **Franco Tampieri e gli altri membri del gruppo [Odoo ITA](https://www.odoo-italia.org/)** - per aver fornito alcune dritte utilissime sulla 
 installazione dei moduli nella immagine docker di odoo.
+
 
 # 2. Utilizzo
 
